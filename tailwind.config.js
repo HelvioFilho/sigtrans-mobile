@@ -7,6 +7,10 @@ module.exports = {
         regular: "Roboto_400Regular",
         bold: "Roboto_700Bold",
       },
+      fontSize: {
+        base: "18px",
+        title: "28px",
+      },
     },
   },
   plugins: [],

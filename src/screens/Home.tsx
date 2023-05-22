@@ -2,8 +2,9 @@ import { Image, SectionList, Text, TouchableOpacity, View } from "react-native";
 
 import Logo from "@/assets/logo.png";
 import { useState } from "react";
+import { DocumentsList } from "@/components/DocumentsList";
 
-type HomeProps = {
+export type DocumentsProps = {
   id: string;
   name: string;
   model: string;
@@ -13,7 +14,7 @@ type HomeProps = {
 
 type DocumentsListProps = {
   date: string;
-  data: HomeProps[];
+  data: DocumentsProps[];
 };
 
 export function Home() {
@@ -60,38 +61,7 @@ export function Home() {
         sections={documents}
         keyExtractor={(item) => item.id}
         className="my-5"
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="my-1.5"
-            activeOpacity={0.8}
-            onPress={() => {}}
-          >
-            <View className="w-full bg-gray-300 py-3 px-4 rounded-lg">
-              <View className="flex-row items-center py-1">
-                <Text className="font-bold text-base">Agente: </Text>
-                <Text className="font-regular text-base">{item.name}</Text>
-              </View>
-              <View className="flex-row gap-4">
-                <View className="flex-row items-center">
-                  <Text className="font-bold text-base">Modelo: </Text>
-                  <Text className="font-regular text-base">{item.model}</Text>
-                </View>
-                <View className="flex-row items-center">
-                  <Text className="font-bold text-base">Placa: </Text>
-                  <Text className="font-regular text-base">{item.plate}</Text>
-                </View>
-              </View>
-              <View className="flex-row items-center">
-                <Text className="font-bold text-base">
-                  Parque de Retenção:{" "}
-                </Text>
-                <Text className="font-regular text-base">
-                  {item.retentionPark}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => <DocumentsList data={item} />}
         showsVerticalScrollIndicator={false}
         renderSectionHeader={({ section: { date } }) => (
           <View className="py-3 justify-center items-center">

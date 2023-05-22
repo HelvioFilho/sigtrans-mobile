@@ -113,7 +113,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.sigtrans"
+    namespace 'com.hsvf.sigtrans'
     defaultConfig {
         applicationId 'com.hsvf.sigtrans'
         minSdkVersion rootProject.ext.minSdkVersion

@@ -3,6 +3,7 @@ import { Image, SectionList, Text, TouchableOpacity, View } from "react-native";
 import Logo from "@/assets/logo.png";
 import { useState } from "react";
 import { DocumentsList } from "@/components/DocumentsList";
+import { isToday } from "@/utils/isToday";
 
 export type DocumentsProps = {
   id: string;
@@ -65,7 +66,9 @@ export function Home() {
         showsVerticalScrollIndicator={false}
         renderSectionHeader={({ section: { date } }) => (
           <View className="py-3 justify-center items-center">
-            <Text className="font-bold tracking-widest text-base">{date}</Text>
+            <Text className="font-bold tracking-widest text-base">
+              {isToday(date)}
+            </Text>
           </View>
         )}
       />

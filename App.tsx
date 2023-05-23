@@ -1,10 +1,11 @@
+import "react-native-gesture-handler";
 import { StatusBar } from "react-native";
 import {
   useFonts,
   Roboto_400Regular,
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
-import { Home } from "@/screens/Home";
+import { Routes } from "@/routes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,7 +20,7 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      {fontsLoaded ? <Home /> : null}
+      {fontsLoaded ? <Routes /> : null}
     </>
   );
 }

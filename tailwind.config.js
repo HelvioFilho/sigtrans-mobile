@@ -9,6 +9,8 @@ module.exports = {
       },
       fontSize: {
         base: "18px",
+        input: "16px",
+        md: "20px",
         title: "28px",
       },
     },

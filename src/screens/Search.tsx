@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputField } from "@/components/InputField";
+import { IconButton } from "@/components/IconButton";
 
 type FormData = {
   search: string;
@@ -17,6 +18,7 @@ const schema = Yup.object().shape({
 });
 
 export function Search() {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -27,9 +29,12 @@ export function Search() {
 
   async function handleSearch({ search }: Partial<FormData>) {
     try {
+      setIsLoading(true);
       console.log(search);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -42,12 +47,11 @@ export function Search() {
         error={errors && (errors.search?.message as string)}
         placeholder="Exemplo de busca: 23/02/2023"
         icon={
-          <TouchableOpacity
-            className="absolute right-0 w-12 h-12 bg-teal-600 justify-center items-center rounded-md"
-            onPress={handleSubmit(handleSearch)}
-          >
-            <Ionicons name="search" size={28} color="white" />
-          </TouchableOpacity>
+          <IconButton
+            iconName="search"
+            isLoading={isLoading}
+            onSubmit={handleSubmit(handleSearch)}
+          />
         }
       />
     </View>

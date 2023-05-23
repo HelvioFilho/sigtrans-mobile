@@ -8,8 +8,9 @@ module.exports = {
         bold: "Roboto_700Bold",
       },
       fontSize: {
-        base: "18px",
+        error: "14px",
         input: "16px",
+        base: "18px",
         md: "20px",
         title: "28px",
       },

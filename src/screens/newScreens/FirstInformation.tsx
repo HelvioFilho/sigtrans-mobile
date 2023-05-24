@@ -8,11 +8,18 @@ import { IconButton } from "@/components/IconButton";
 import { useState } from "react";
 import { Modal } from "react-native";
 import { SelectPark } from "@/components/Select/SelectPark";
+import { TitleWrapper } from "@/components/TitleWrapper";
+import { Label } from "@/components/Label";
+import { useDynamicRefs } from "@/utils/useDynamicRefs";
+import { Select } from "@/components/Select/Select";
+import { SPECIES, VEHICLETYPE } from "@/utils/defaultData";
 
 const schema = Yup.object().shape({});
 
 export function FirstInformation() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isRetentionPark, setIsRetentionPark] = useState(false);
+  const [isType, setIsType] = useState(false);
 
   const {
     control,
@@ -24,13 +31,40 @@ export function FirstInformation() {
     resolver: yupResolver(schema),
   });
 
-  function handleSelect(field: string[], value: string[]) {
+  const ids = [
+    "driver",
+    "name",
+    "address",
+    "plate",
+    "chassi",
+    "brand",
+    "model",
+    "uf",
+    "type",
+    "species",
+    "year",
+  ];
+
+  const refs = useDynamicRefs(ids);
+
+  function resetSelect() {
+    setIsRetentionPark(false);
+    setIsType(false);
+  }
+
+  function handleSelect(field: string[], value: string[], target: string) {
     setModalVisible(false);
     Keyboard.dismiss();
     clearErrors(field);
+    setTimeout(() => {
+      if (refs[target].current) {
+        refs[target].current?.focus();
+      }
+    }, 400);
     for (let i = 0; i < field.length; i++) {
       setValue(field[i], value[i]);
     }
+    resetSelect();
   }
 
   return (
@@ -47,58 +81,214 @@ export function FirstInformation() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="always"
       >
-        <View className="items-center">
-          <Text className="font-bold text-subtitle">Reboque</Text>
-        </View>
-        <View className="pt-8 px-4">
-          <Text className="font-bold text-base">Placa do Reboque:</Text>
-          <InputField
-            name="plateTowTruck"
-            placeholder="Digite a placa do reboque"
-            control={control}
-            error={errors && (errors.plateTowTruck?.message as string)}
-            keyboardType="visible-password"
-          />
-        </View>
-        <View className="pt-3 pb-8 px-4">
-          <Text className="font-bold text-base">Nome do Motorista:</Text>
-          <InputField
-            name="driver"
-            placeholder="Digite o nome do motorista"
-            control={control}
-            error={errors && (errors.driver?.message as string)}
-            keyboardType="default"
-          />
-        </View>
-        <View className="items-center">
-          <Text className="font-bold text-subtitle">Parque de Retenção</Text>
-        </View>
-        <View className="pt-8 px-4">
-          <Text className="font-bold text-base">Nome:</Text>
-          <InputField
-            name="name"
-            placeholder="Digite o nome do parque"
-            control={control}
-            error={errors && (errors.name?.message as string)}
-            icon={
-              <IconButton
-                iconName="search"
-                onSubmit={() => {
-                  setModalVisible(true);
-                }}
-              />
-            }
-          />
-        </View>
-        <View className="pt-4 px-4">
-          <Text className="font-bold text-base">Endereço:</Text>
-          <InputField
-            name="address"
-            placeholder="Digite o endereço do parque"
-            control={control}
-            error={errors && (errors.address?.message as string)}
-          />
-        </View>
+        <TitleWrapper title="Reboque" />
+        <Label
+          title="Placa do Reboque:"
+          type="first"
+          children={
+            <InputField
+              name="plateTowTruck"
+              placeholder="Placa do reboque"
+              control={control}
+              error={errors && (errors.plateTowTruck?.message as string)}
+              keyboardType="visible-password"
+              uppercase
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.driver.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="Nome do motorista: "
+          type="last"
+          children={
+            <InputField
+              name="driver"
+              placeholder="Nome do motorista"
+              control={control}
+              error={errors && (errors.driver?.message as string)}
+              inputRef={refs.driver}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.name.current?.focus()}
+            />
+          }
+        />
+        <TitleWrapper title="Parque de Retenção" />
+        <Label
+          title="Nome do Parque:"
+          type="first"
+          children={
+            <InputField
+              name="name"
+              placeholder="Nome do parque"
+              control={control}
+              error={errors && (errors.name?.message as string)}
+              inputRef={refs.name}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.address.current?.focus()}
+              icon={
+                <IconButton
+                  iconName="search"
+                  onSubmit={() => {
+                    setIsRetentionPark(true);
+                    setModalVisible(true);
+                  }}
+                />
+              }
+            />
+          }
+        />
+        <Label
+          title="Endereço:"
+          type="last"
+          children={
+            <InputField
+              name="address"
+              control={control}
+              placeholder="Endereço do parque"
+              error={errors && (errors.address?.message as string)}
+              inputRef={refs.address}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.model.current?.focus()}
+            />
+          }
+        />
+        <TitleWrapper title="Informações do Veículo" />
+        <Label
+          title="Modelo:"
+          type="first"
+          children={
+            <InputField
+              name="model"
+              control={control}
+              placeholder="Modelo do veículo"
+              error={errors && (errors.model?.message as string)}
+              inputRef={refs.model}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.plate.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="Placa:"
+          children={
+            <InputField
+              name="plate"
+              control={control}
+              placeholder="Placa do veículo"
+              error={errors && (errors.plate?.message as string)}
+              keyboardType="visible-password"
+              uppercase
+              inputRef={refs.plate}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.chassi.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="Chassi:"
+          children={
+            <InputField
+              name="chassi"
+              control={control}
+              placeholder="Chassi do veículo"
+              error={errors && (errors.chassi?.message as string)}
+              keyboardType="visible-password"
+              uppercase
+              inputRef={refs.chassi}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.brand.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="Marca:"
+          children={
+            <InputField
+              name="brand"
+              control={control}
+              placeholder="Marca do Veículo"
+              error={errors && (errors.brand?.message as string)}
+              inputRef={refs.brand}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.uf.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="UF:"
+          children={
+            <InputField
+              name="uf"
+              control={control}
+              placeholder="Tipo de Veículo"
+              error={errors && (errors.uf?.message as string)}
+              uppercase
+              inputRef={refs.uf}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.type.current?.focus()}
+            />
+          }
+        />
+        <Label
+          title="Tipo:"
+          children={
+            <InputField
+              name="type"
+              control={control}
+              placeholder="Tipo de Veículo"
+              error={errors && (errors.type?.message as string)}
+              inputRef={refs.type}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.species.current?.focus()}
+              icon={
+                <IconButton
+                  iconName="search"
+                  onSubmit={() => {
+                    setIsType(true);
+                    setModalVisible(true);
+                  }}
+                />
+              }
+            />
+          }
+        />
+        <Label
+          title="Espécie:"
+          children={
+            <InputField
+              name="species"
+              control={control}
+              placeholder="Espécie de Veículo"
+              error={errors && (errors.species?.message as string)}
+              inputRef={refs.species}
+              blurOnSubmit={false}
+              onSubmitEditing={() => refs.year.current?.focus()}
+              icon={
+                <IconButton
+                  iconName="search"
+                  onSubmit={() => {
+                    setModalVisible(true);
+                  }}
+                />
+              }
+            />
+          }
+        />
+        <Label
+          title="Ano do veículo:"
+          type="last"
+          children={
+            <InputField
+              name="year"
+              control={control}
+              keyboardType="number-pad"
+              placeholder="Ano do Veículo"
+              error={errors && (errors.year?.message as string)}
+              inputRef={refs.year}
+            />
+          }
+        />
         <Modal
           animationType="fade"
           transparent={true}
@@ -107,10 +297,26 @@ export function FirstInformation() {
             setModalVisible(false);
           }}
         >
-          <SelectPark
-            onPress={handleSelect}
-            onClose={() => setModalVisible(false)}
-          />
+          {isRetentionPark ? (
+            <SelectPark
+              onPress={handleSelect}
+              onClose={() => {
+                resetSelect();
+                setModalVisible(false);
+              }}
+            />
+          ) : (
+            <Select
+              target={isType ? "species" : "year"}
+              type={isType ? "type" : "species"}
+              onPress={handleSelect}
+              onClose={() => {
+                resetSelect();
+                setModalVisible(false);
+              }}
+              data={isType ? VEHICLETYPE : SPECIES}
+            />
+          )}
         </Modal>
       </ScrollView>
     </View>

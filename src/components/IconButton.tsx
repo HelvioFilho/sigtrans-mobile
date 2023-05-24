@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 type IconButton = {
   iconName: "search";
-  isLoading: boolean;
+  isLoading?: boolean;
   onSubmit: () => void;
 };
 

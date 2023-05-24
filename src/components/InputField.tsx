@@ -6,7 +6,7 @@ type InputFieldProps = TextInputProps & {
   name: string;
   control: Control<any>;
   error: string | undefined;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 };
 
 export function InputField({

@@ -7,6 +7,8 @@ type InputFieldProps = TextInputProps & {
   control: Control<any>;
   error: string | undefined;
   icon?: React.ReactNode;
+  inputRef?: React.Ref<any> | null;
+  uppercase?: boolean;
 };
 
 export function InputField({
@@ -14,6 +16,8 @@ export function InputField({
   control,
   error,
   icon,
+  inputRef,
+  uppercase = false,
   ...rest
 }: InputFieldProps) {
   return (
@@ -24,6 +28,7 @@ export function InputField({
           name={name}
           render={({ field: { onChange, value } }) => (
             <TextInput
+              ref={inputRef}
               className={`
                 bg-gray-100 
                 border-2 
@@ -37,7 +42,10 @@ export function InputField({
                 font-regular 
                 text-input
               `}
-              onChangeText={onChange}
+              onChangeText={(text) => {
+                const textToChange = uppercase ? text.toUpperCase() : text;
+                onChange(textToChange);
+              }}
               value={value}
               {...rest}
             />

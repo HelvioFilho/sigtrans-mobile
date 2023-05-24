@@ -13,8 +13,49 @@ import { Label } from "@/components/Label";
 import { useDynamicRefs } from "@/utils/useDynamicRefs";
 import { Select } from "@/components/Select/Select";
 import { SPECIES, VEHICLETYPE } from "@/utils/defaultData";
+import { Button } from "@/components/Button";
+import { RetentionParkDTO } from "@/dtos/RetentionParkDTO";
+import { TowTruckDTO } from "@/dtos/TowTruckDTO";
+import { VehicleDTO } from "@/dtos/VehicleDTO";
 
-const schema = Yup.object().shape({});
+const schema = Yup.object().shape({
+  plateTowTruck: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  driver: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  name: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  address: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  plate: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  chassi: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  brand: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  model: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  uf: Yup.string()
+    .trim()
+    .required("Campo obrigatório, coloque a sigla do estado. Ex: PA"),
+  type: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  species: Yup.string()
+    .trim()
+    .required("Campo obrigatório, caso não possua, escreva: Não consta"),
+  year: Yup.string().trim().required("Campo obrigatório. Ex: 2021"),
+});
+
+type FormData = RetentionParkDTO & TowTruckDTO & VehicleDTO;
 
 export function FirstInformation() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,6 +106,10 @@ export function FirstInformation() {
       setValue(field[i], value[i]);
     }
     resetSelect();
+  }
+
+  function saveData(data: Partial<FormData>) {
+    console.log(data);
   }
 
   return (
@@ -289,6 +334,11 @@ export function FirstInformation() {
             />
           }
         />
+        <View className="flex-row justify-end pr-4">
+          <View className="w-[40%]">
+            <Button title="Próximo" onPress={handleSubmit(saveData)} />
+          </View>
+        </View>
         <Modal
           animationType="fade"
           transparent={true}

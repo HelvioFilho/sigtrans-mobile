@@ -12,6 +12,7 @@ module.exports = {
         input: "16px",
         base: "18px",
         md: "20px",
+        subtitle: "24px",
         title: "28px",
       },
     },

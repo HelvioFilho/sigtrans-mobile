@@ -1,8 +1,9 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { Home } from "@/screens/Home";
 import { Search } from "@/screens/Search";
+import { New } from "@/screens/New";
 
 function TabNavigation() {
   const { Navigator, Screen } = createBottomTabNavigator();
@@ -31,8 +32,22 @@ function TabNavigation() {
         component={Search}
         options={{
           tabBarLabel: "Buscar",
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" color={color} size={size} />
+          ),
+        }}
+      />
+      <Screen
+        name="New"
+        component={New}
+        options={{
+          tabBarLabel: "Novo",
+          tabBarIcon: ({ focused, color, size }) => (
+            <AntDesign
+              name={focused ? "pluscircle" : "pluscircleo"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />

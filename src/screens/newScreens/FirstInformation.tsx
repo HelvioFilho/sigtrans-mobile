@@ -1,22 +1,24 @@
-import { Keyboard, ScrollView, Text, View } from "react-native";
-
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Keyboard, ScrollView, Text, View, Modal } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { Label } from "@/components/Label";
+import { Button } from "@/components/Button";
+import { Select } from "@/components/Select/Select";
 import { InputField } from "@/components/InputField";
 import { IconButton } from "@/components/IconButton";
-import { useState } from "react";
-import { Modal } from "react-native";
 import { SelectPark } from "@/components/Select/SelectPark";
 import { TitleWrapper } from "@/components/TitleWrapper";
-import { Label } from "@/components/Label";
+
 import { useDynamicRefs } from "@/utils/useDynamicRefs";
-import { Select } from "@/components/Select/Select";
 import { SPECIES, VEHICLETYPE } from "@/utils/defaultData";
-import { Button } from "@/components/Button";
+
 import { RetentionParkDTO } from "@/dtos/RetentionParkDTO";
 import { TowTruckDTO } from "@/dtos/TowTruckDTO";
 import { VehicleDTO } from "@/dtos/VehicleDTO";
+import { generateId, getStorage, saveStorage } from "@/utils/storageHelper";
+import { useNavigation } from "@react-navigation/native";
 
 const schema = Yup.object().shape({
   plateTowTruck: Yup.string()
@@ -62,6 +64,10 @@ export function FirstInformation() {
   const [isRetentionPark, setIsRetentionPark] = useState(false);
   const [isType, setIsType] = useState(false);
 
+  const KEY = `firstInformation`;
+
+  const { navigate } = useNavigation();
+
   const {
     control,
     clearErrors,
@@ -88,6 +94,11 @@ export function FirstInformation() {
 
   const refs = useDynamicRefs(ids);
 
+  function saveData(data: Partial<FormData>) {
+    saveStorage(KEY, JSON.stringify(data));
+    navigate("New", { id: 1 });
+  }
+
   function resetSelect() {
     setIsRetentionPark(false);
     setIsType(false);
@@ -108,9 +119,20 @@ export function FirstInformation() {
     resetSelect();
   }
 
-  function saveData(data: Partial<FormData>) {
-    console.log(data);
+  function checkValuesAreAlreadyFilled() {
+    const response = getStorage(KEY);
+    const data = response ? JSON.parse(response) : null;
+    if (data) {
+      for (const key in data) {
+        setValue(key, data[key]);
+      }
+    }
   }
+
+  useEffect(() => {
+    checkValuesAreAlreadyFilled();
+    generateId();
+  }, []);
 
   return (
     <View className="flex-1 mt-5">

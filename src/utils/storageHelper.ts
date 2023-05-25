@@ -10,3 +10,13 @@ export function saveStorage(key: string, value: string) {
 export function getStorage(key: string) {
   return storage.getString(key);
 }
+
+export function generateId() {
+  const alreadyExists = getStorage("id");
+  if (!alreadyExists) {
+    const id = uuid.v4();
+    saveStorage("id", JSON.stringify(id));
+    return id;
+  }
+  return JSON.parse(alreadyExists);
+}

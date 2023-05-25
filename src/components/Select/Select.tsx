@@ -47,7 +47,7 @@ export function Select({ target, type, data, onPress, onClose }: SelectProps) {
         Selecione abaixo ou efetue uma busca pelo nome:
       </Text>
       <TextInput
-        placeholder="Pesquise pelo nome do parque"
+        placeholder="Pesquise pelo nome"
         className="bg-gray-100
         border-2
         border-gray-600

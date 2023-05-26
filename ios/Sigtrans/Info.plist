@@ -46,12 +46,18 @@
         </dict>
       </dict>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Deseja permitir que o aplicativo ${PRODUCT_NAME} acesse sua câmera?</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Deseja permitir que o aplicativo ${PRODUCT_NAME} acesse sua localização enquanto estiver em uso?</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your photos</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

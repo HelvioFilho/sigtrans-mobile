@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Keyboard, ScrollView, Text, View, Modal } from "react-native";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+
 import { Label } from "@/components/Label";
 import { Button } from "@/components/Button";
 import { Select } from "@/components/Select/Select";
@@ -17,8 +19,9 @@ import { SPECIES, VEHICLETYPE } from "@/utils/defaultData";
 import { RetentionParkDTO } from "@/dtos/RetentionParkDTO";
 import { TowTruckDTO } from "@/dtos/TowTruckDTO";
 import { VehicleDTO } from "@/dtos/VehicleDTO";
-import { generateId, getStorage, saveStorage } from "@/utils/storageHelper";
+
 import { useNavigation } from "@react-navigation/native";
+import { useFirstStore } from "@/stores/firstStore";
 
 const schema = Yup.object().shape({
   plateTowTruck: Yup.string()
@@ -64,9 +67,8 @@ export function FirstInformation() {
   const [isRetentionPark, setIsRetentionPark] = useState(false);
   const [isType, setIsType] = useState(false);
 
-  const KEY = `firstInformation`;
-
   const { navigate } = useNavigation();
+  const { firstData, setFirstData } = useFirstStore();
 
   const {
     control,
@@ -78,26 +80,32 @@ export function FirstInformation() {
     resolver: yupResolver(schema),
   });
 
-  const ids = [
-    "driver",
-    "name",
-    "address",
-    "plate",
-    "chassi",
-    "brand",
-    "model",
-    "uf",
-    "type",
-    "species",
-    "year",
-  ];
+  const ids = useMemo(
+    () => [
+      "driver",
+      "name",
+      "address",
+      "plate",
+      "chassi",
+      "brand",
+      "model",
+      "uf",
+      "type",
+      "species",
+      "year",
+    ],
+    []
+  );
 
   const refs = useDynamicRefs(ids);
 
-  function saveData(data: Partial<FormData>) {
-    saveStorage(KEY, JSON.stringify(data));
-    navigate("New", { id: 1 });
-  }
+  const saveData = useCallback(
+    (data: Partial<FormData>) => {
+      setFirstData(data);
+      navigate("New", { id: 1 });
+    },
+    [navigate]
+  );
 
   function resetSelect() {
     setIsRetentionPark(false);
@@ -120,18 +128,14 @@ export function FirstInformation() {
   }
 
   function checkValuesAreAlreadyFilled() {
-    const response = getStorage(KEY);
-    const data = response ? JSON.parse(response) : null;
-    if (data) {
-      for (const key in data) {
-        setValue(key, data[key]);
-      }
-    }
+    Object.keys(firstData).forEach((key) => {
+      const propertyKey = key as keyof FormData;
+      setValue(key, firstData[propertyKey]);
+    });
   }
 
   useEffect(() => {
     checkValuesAreAlreadyFilled();
-    generateId();
   }, []);
 
   return (

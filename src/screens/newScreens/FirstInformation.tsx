@@ -128,6 +128,7 @@ export function FirstInformation() {
   }
 
   function checkValuesAreAlreadyFilled() {
+    if (Object.keys(firstData).length === 0) return;
     Object.keys(firstData).forEach((key) => {
       const propertyKey = key as keyof FormData;
       setValue(key, firstData[propertyKey]);

@@ -2,7 +2,7 @@ import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 type IconButton = {
-  iconName: "search";
+  iconName: "search" | "add";
   isLoading?: boolean;
   onSubmit: () => void;
 };

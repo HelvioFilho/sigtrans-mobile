@@ -16,6 +16,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { InputField } from "../InputField";
 import { SelectItemProps } from "@/screens/newScreens/SecondInformation";
+import { useSelectItemStore } from "@/stores/selectItemStore";
 
 type SelectItemsProps = {
   onPress: (data: SelectItemProps[]) => void;
@@ -39,7 +40,6 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
   const [modalItem, setModalItem] = useState<ModalItemProps>(
     {} as ModalItemProps
   );
-  const [filteredAccessory, setFilteredAccessory] = useState(ACCESSORY);
   const [expandedId, setExpandedId] = useState<Record<string, boolean>>({});
   const [selectedOption, setSelectedOption] = useState<
     Record<string, { damage: string; isOther: boolean }>
@@ -57,6 +57,8 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
   const [selectedAccessory, setSelectedAccessory] =
     useState<SelectItemProps[]>(data);
 
+  const { selectItem, setSelectItem } = useSelectItemStore();
+
   const schema = yup.object().shape({
     customAccessory: yup
       .string()
@@ -65,7 +67,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
         "unique-accessory",
         "Esse acessório já foi adicionado!",
         (value) => {
-          return !filteredAccessory.some(
+          return !selectItem.some(
             (accessory) =>
               accessory.name.toLowerCase().trim() ===
               value?.toLowerCase().trim()
@@ -89,7 +91,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
         id: String(Math.random()),
         name: data.customAccessory.trim(),
       };
-      setFilteredAccessory([newAccessory, ...filteredAccessory]);
+      setSelectItem([newAccessory, ...selectItem]);
       setValue("customAccessory", "");
     }
   }
@@ -123,13 +125,26 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
         };
       }
     });
-    toggleExpanded(id);
+
     setSelectedAccessory((prevState) => {
       const existingSelectionIndex = prevState.findIndex(
         (item) => item.id === id
       );
+
       if (existingSelectionIndex !== -1) {
-        return prevState.filter((_, index) => index !== existingSelectionIndex);
+        const existingItem = prevState[existingSelectionIndex];
+
+        if (existingItem.damage === option) {
+          return prevState.filter(
+            (_, index) => index !== existingSelectionIndex
+          );
+        } else {
+          const newItem = { id, name, damage: option, other };
+          const newState = prevState.map((item, index) =>
+            index === existingSelectionIndex ? newItem : item
+          );
+          return newState;
+        }
       } else {
         return [
           ...prevState,
@@ -142,6 +157,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
         ];
       }
     });
+    toggleExpanded(id);
   }
 
   return (
@@ -171,7 +187,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
         />
       </View>
       <FlatList
-        data={filteredAccessory}
+        data={selectItem}
         keyExtractor={(item) => String(item.id)}
         contentContainerStyle={{ paddingBottom: 50 }}
         showsVerticalScrollIndicator={false}

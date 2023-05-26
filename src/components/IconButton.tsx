@@ -2,17 +2,19 @@ import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 type IconButton = {
-  iconName: "search" | "add";
+  iconName: "search" | "add" | "location-sharp" | "trash";
   isLoading?: boolean;
+  color?: string;
   onSubmit: () => void;
 };
 
 export function IconButton({
   iconName,
   isLoading = false,
+  color = "bg-teal-600",
   onSubmit,
 }: IconButton) {
-  const bgColor = isLoading ? "bg-slate-500" : "bg-teal-600";
+  const bgColor = isLoading ? "bg-slate-500" : color;
   return (
     <TouchableOpacity
       className={`

@@ -6,5 +6,5 @@ export type VehicleDTO = {
   uf: string;
   type: string;
   species: string;
-  year: number;
+  year: string;
 };

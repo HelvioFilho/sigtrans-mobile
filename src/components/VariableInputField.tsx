@@ -6,12 +6,14 @@ type VariableInputFieldProps = TextInputProps & {
   name: string;
   control: Control<any>;
   changedHeight: number;
+  inputRef?: React.Ref<any> | null;
 };
 
 export function VariableInputField({
   name,
   control,
   changedHeight,
+  inputRef,
   ...rest
 }: VariableInputFieldProps) {
   const height = `${changedHeight}px`;
@@ -23,6 +25,7 @@ export function VariableInputField({
           name={name}
           render={({ field: { onChange, value } }) => (
             <TextInput
+              ref={inputRef}
               className={`
               bg-gray-100 
               border-2 

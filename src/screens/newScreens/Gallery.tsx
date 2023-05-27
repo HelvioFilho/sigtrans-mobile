@@ -162,7 +162,7 @@ export function Gallery() {
             ))}
           </View>
         </View>
-        <View className="flex-row justify-between px-4 pt-8">
+        <View className="flex-row justify-between px-4 pt-14">
           <View className="w-[40%]">
             <Button
               title="Anterior"

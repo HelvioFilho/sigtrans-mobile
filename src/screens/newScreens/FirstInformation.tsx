@@ -85,9 +85,9 @@ export function FirstInformation() {
   const ids = useMemo(
     () => [
       "plateTowTruck",
-      "driver",
-      "name",
-      "address",
+      "driverTowTruck",
+      "retentionParkName",
+      "retentionParkAddress",
       "plate",
       "chassi",
       "brand",
@@ -183,13 +183,13 @@ export function FirstInformation() {
           type="last"
           children={
             <InputField
-              name="driver"
+              name="driverTowTruck"
               placeholder="Nome do motorista"
               control={control}
-              error={errors && (errors.driver?.message as string)}
-              inputRef={refs.driver}
+              error={errors && (errors.driverTowTruck?.message as string)}
+              inputRef={refs.driverTowTruck}
               blurOnSubmit={false}
-              onSubmitEditing={() => refs.name.current?.focus()}
+              onSubmitEditing={() => refs.retentionParkName.current?.focus()}
             />
           }
         />
@@ -199,13 +199,13 @@ export function FirstInformation() {
           type="first"
           children={
             <InputField
-              name="name"
+              name="retentionParkName"
               placeholder="Nome do parque"
               control={control}
-              error={errors && (errors.name?.message as string)}
-              inputRef={refs.name}
+              error={errors && (errors.retentionParkName?.message as string)}
+              inputRef={refs.retentionParkName}
               blurOnSubmit={false}
-              onSubmitEditing={() => refs.address.current?.focus()}
+              onSubmitEditing={() => refs.retentionParkAddress.current?.focus()}
               icon={
                 <IconButton
                   iconName="search"
@@ -223,11 +223,11 @@ export function FirstInformation() {
           type="last"
           children={
             <InputField
-              name="address"
+              name="retentionParkAddress"
               control={control}
               placeholder="Endereço do parque"
-              error={errors && (errors.address?.message as string)}
-              inputRef={refs.address}
+              error={errors && (errors.retentionParkAddress?.message as string)}
+              inputRef={refs.retentionParkAddress}
               blurOnSubmit={false}
               onSubmitEditing={() => refs.model.current?.focus()}
             />

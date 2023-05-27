@@ -40,16 +40,24 @@ export function Review() {
           />
         </Label>
         <Label title="Nome do motorista:" type="first">
-          <EditInformation title={firstData.driver!} refName="driver" id={0} />
+          <EditInformation
+            title={firstData.driverTowTruck!}
+            refName="driverTowTruck"
+            id={0}
+          />
         </Label>
         <TitleWrapper title="Parque de Retenção" className="mt-10" />
         <Label title="Nome do Parque:" type="first">
-          <EditInformation title={firstData.name!} refName="name" id={0} />
+          <EditInformation
+            title={firstData.retentionParkName!}
+            refName="retentionParkName"
+            id={0}
+          />
         </Label>
         <Label title="Endereço:" type="first">
           <EditInformation
-            title={firstData.address!}
-            refName="address"
+            title={firstData.retentionParkAddress!}
+            refName="retentionParkAddress"
             id={0}
           />
         </Label>

@@ -21,7 +21,7 @@ import {
   getReverseGeocodeAsync,
 } from "@/utils/locationHelper";
 
-import { AdditionalDataDTO } from "@/dtos/AdditionalData.DTO";
+import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { useSecondStore } from "@/stores/secondStore";
 import { useReviewStore } from "@/stores/reviewStore";
 

@@ -1,4 +1,4 @@
 export type RetentionParkDTO = {
-  name: string;
-  address: string;
+  retentionParkName: string;
+  retentionParkAddress: string;
 };

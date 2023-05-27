@@ -67,7 +67,11 @@ export function SelectPark({ onPress, onClose }: SelectParkProps) {
             className="border p04 my-2 rounded-lg bg-white"
             activeOpacity={0.8}
             onPress={() =>
-              onPress(["name", "address"], [item.name, item.address], "model")
+              onPress(
+                ["retentionParkName", "retentionParkAddress"],
+                [item.name, item.address],
+                "model"
+              )
             }
           >
             <View className="w-full bg-gray-300 py-3 px-4 rounded-lg">

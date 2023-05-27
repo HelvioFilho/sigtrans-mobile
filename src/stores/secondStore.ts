@@ -1,4 +1,4 @@
-import { AdditionalDataDTO } from "@/dtos/AdditionalData.DTO";
+import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { LocationDTO } from "@/dtos/LocationDTO";
 import { SelectItemProps } from "@/screens/newScreens/SecondInformation";
 import { getStorage, saveStorage } from "@/utils/storageHelper";

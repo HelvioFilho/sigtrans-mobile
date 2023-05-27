@@ -23,6 +23,7 @@ import {
 
 import { AdditionalDataDTO } from "@/dtos/AdditionalData.DTO";
 import { useSecondStore } from "@/stores/secondStore";
+import { useReviewStore } from "@/stores/reviewStore";
 
 type FormData = AdditionalDataDTO & {
   address: string;
@@ -73,6 +74,7 @@ export function SecondInformation() {
 
   const { navigate } = useNavigation();
   const { secondData, setSecondData } = useSecondStore();
+  const { refData, setRefData } = useReviewStore();
 
   const {
     control,
@@ -86,11 +88,13 @@ export function SecondInformation() {
 
   const ids = useMemo(
     () => [
+      "driverName",
       "driverLicenseOrId",
       "driverEmail",
       "agentName",
       "agentId",
       "address",
+      "observations",
     ],
     []
   );
@@ -155,6 +159,10 @@ export function SecondInformation() {
   useEffect(() => {
     getPermissions();
     checkItems();
+    if (refData !== undefined) {
+      refs[refData].current?.focus();
+      setRefData(undefined);
+    }
   }, []);
 
   return (
@@ -182,6 +190,7 @@ export function SecondInformation() {
               control={control}
               error={errors && (errors.driverName?.message as string)}
               keyboardType="default"
+              inputRef={refs.driverName}
               blurOnSubmit={false}
               onSubmitEditing={() => refs.driverLicenseOrId.current?.focus()}
             />
@@ -335,6 +344,7 @@ export function SecondInformation() {
         <TitleWrapper title="Observações" />
         <View className="flex-1 px-4 my-5">
           <VariableInputField
+            inputRef={refs.observations}
             name="observations"
             placeholder="Observações"
             control={control}

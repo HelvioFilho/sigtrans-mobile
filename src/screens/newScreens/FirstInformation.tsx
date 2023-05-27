@@ -22,6 +22,7 @@ import { VehicleDTO } from "@/dtos/VehicleDTO";
 
 import { useNavigation } from "@react-navigation/native";
 import { useFirstStore } from "@/stores/firstStore";
+import { useReviewStore } from "@/stores/reviewStore";
 
 const schema = Yup.object().shape({
   plateTowTruck: Yup.string()
@@ -69,6 +70,7 @@ export function FirstInformation() {
 
   const { navigate } = useNavigation();
   const { firstData, setFirstData } = useFirstStore();
+  const { refData, setRefData } = useReviewStore();
 
   const {
     control,
@@ -82,6 +84,7 @@ export function FirstInformation() {
 
   const ids = useMemo(
     () => [
+      "plateTowTruck",
       "driver",
       "name",
       "address",
@@ -137,6 +140,10 @@ export function FirstInformation() {
 
   useEffect(() => {
     checkValuesAreAlreadyFilled();
+    if (refData !== undefined) {
+      refs[refData].current?.focus();
+      setRefData(undefined);
+    }
   }, []);
 
   return (
@@ -160,6 +167,7 @@ export function FirstInformation() {
           children={
             <InputField
               name="plateTowTruck"
+              inputRef={refs.plateTowTruck}
               placeholder="Placa do reboque"
               control={control}
               error={errors && (errors.plateTowTruck?.message as string)}

@@ -28,13 +28,13 @@ const schema = Yup.object().shape({
   plateTowTruck: Yup.string()
     .trim()
     .required("Campo obrigatório, caso não possua, escreva: Não consta"),
-  driver: Yup.string()
+  driverTowTruck: Yup.string()
     .trim()
     .required("Campo obrigatório, caso não possua, escreva: Não consta"),
-  name: Yup.string()
+  retentionParkName: Yup.string()
     .trim()
     .required("Campo obrigatório, caso não possua, escreva: Não consta"),
-  address: Yup.string()
+  retentionParkAddress: Yup.string()
     .trim()
     .required("Campo obrigatório, caso não possua, escreva: Não consta"),
   plate: Yup.string()
@@ -104,6 +104,7 @@ export function FirstInformation() {
 
   const saveData = useCallback(
     (data: Partial<FormData>) => {
+      console.log("entrei");
       setFirstData(data);
       navigate("New", { id: 1 });
     },

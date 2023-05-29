@@ -7,6 +7,7 @@ import { isToday } from "@/utils/isToday";
 import { useRealm } from "@/database";
 import { VehicleInspection } from "@/database/schemas/VehicleInspection";
 import { useFocusEffect } from "@react-navigation/native";
+import { sortedDate } from "@/utils/sortedDate";
 
 export type DocumentsProps = {
   id: string;
@@ -16,7 +17,7 @@ export type DocumentsProps = {
   retentionPark: string;
 };
 
-type DocumentsListProps = {
+export type DocumentsListProps = {
   date: string;
   data: DocumentsProps[];
 };
@@ -29,33 +30,7 @@ export function Home() {
   function getDocuments() {
     const data = realm.objects<VehicleInspection>("VehicleInspection");
 
-    const dataGroup = data.sorted("date", true).reduce((acc, curr) => {
-      const date = curr.date.toLocaleDateString("pt-BR");
-      const find = acc.find((item) => item.date === date);
-      if (!find) {
-        acc.push({
-          date,
-          data: [
-            {
-              id: curr.documentId,
-              name: curr.agentName,
-              model: curr.model,
-              plate: curr.plate,
-              retentionPark: curr.retentionParkName,
-            },
-          ],
-        });
-      } else {
-        find.data.push({
-          id: curr.documentId,
-          name: curr.agentName,
-          model: curr.model,
-          plate: curr.plate,
-          retentionPark: curr.retentionParkName,
-        });
-      }
-      return acc;
-    }, [] as DocumentsListProps[]);
+    const dataGroup = sortedDate(data);
     setDocuments(dataGroup);
   }
 

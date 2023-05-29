@@ -24,8 +24,10 @@ export class VehicleInspection extends Realm.Object<VehicleInspection> {
   longitude!: string;
   address!: string;
   date!: Date;
+  dateString!: string;
   checkList!: string;
   gallery!: string;
+  observations!: string;
 
   static schema = {
     name: "VehicleInspection",
@@ -53,8 +55,10 @@ export class VehicleInspection extends Realm.Object<VehicleInspection> {
       longitude: "string",
       address: "string",
       date: "date",
+      dateString: "string",
       checkList: "string",
       gallery: "string",
+      observations: "string",
     },
     primaryKey: "_id",
   };

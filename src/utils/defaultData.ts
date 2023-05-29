@@ -27,15 +27,19 @@ export const DAMAGE = [
   { id: "3", name: "Amassado" },
   { id: "4", name: "Moça" },
   { id: "5", name: "Faltando" },
-  { id: "6", name: "Outro" },
+  { id: "6", name: "Rasgado" },
+  { id: "7", name: "Furado" },
+  { id: "8", name: "Outro" },
 ];
 
 export const ACCESSORY = [
   { id: "1", name: "Retrovisor esquerdo" },
   { id: "2", name: "Retrovisor direito" },
   { id: "3", name: "Para-brisa" },
-  { id: "4", name: "Porta esquerda frente" },
-  { id: "5", name: "Porta direita frente" },
-  { id: "6", name: "Rodas" },
-  { id: "7", name: "Pneus" },
+  { id: "4", name: "Porta esquerda dianteira" },
+  { id: "5", name: "Porta direita dianteira" },
+  { id: "6", name: "Porta esquerda traseira" },
+  { id: "7", name: "Porta direita traseira" },
+  { id: "8", name: "Rodas" },
+  { id: "9", name: "Pneus" },
 ];

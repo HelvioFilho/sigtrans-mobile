@@ -14,15 +14,19 @@ import { SelectPark } from "@/components/Select/SelectPark";
 import { TitleWrapper } from "@/components/TitleWrapper";
 
 import { useDynamicRefs } from "@/utils/useDynamicRefs";
-import { SPECIES, VEHICLETYPE } from "@/utils/defaultData";
+import { RETENTIONPARK, SPECIES, VEHICLETYPE } from "@/utils/defaultData";
 
 import { RetentionParkDTO } from "@/dtos/RetentionParkDTO";
 import { TowTruckDTO } from "@/dtos/TowTruckDTO";
 import { VehicleDTO } from "@/dtos/VehicleDTO";
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useFirstStore } from "@/stores/firstStore";
 import { useReviewStore } from "@/stores/reviewStore";
+import { useRealm } from "@/database";
+import { VehicleType } from "@/database/schemas/VehicleType";
+import { Species } from "@/database/schemas/Species";
+import { RetentionPark } from "@/database/schemas/RetentionPark";
 
 const schema = Yup.object().shape({
   plateTowTruck: Yup.string()
@@ -63,10 +67,28 @@ const schema = Yup.object().shape({
 
 type FormData = RetentionParkDTO & TowTruckDTO & VehicleDTO;
 
+type DefaultValue = {
+  id: string;
+  name: string;
+};
+
+export type RetentionParkDefaultValue = {
+  id: string;
+  name: string;
+  address: string;
+};
+
 export function FirstInformation() {
+  const [vehicleType, setVehicleType] = useState<DefaultValue[]>([]);
+  const [species, setSpecies] = useState<DefaultValue[]>([]);
+  const [retentionPark, setRetentionPark] = useState<
+    RetentionParkDefaultValue[]
+  >([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isRetentionPark, setIsRetentionPark] = useState(false);
   const [isType, setIsType] = useState(false);
+
+  const realm = useRealm();
 
   const { navigate } = useNavigation();
   const { firstData, setFirstData } = useFirstStore();
@@ -139,6 +161,25 @@ export function FirstInformation() {
     });
   }
 
+  function setDefaultValues() {
+    const vehicleType = realm.objects(VehicleType).map((item) => ({
+      id: item._id.toString(),
+      name: item.name,
+    }));
+    const species = realm.objects(Species).map((item) => ({
+      id: item._id.toString(),
+      name: item.name,
+    }));
+    const retentionPark = realm.objects(RetentionPark).map((item) => ({
+      id: item._id.toString(),
+      name: item.name,
+      address: item.address,
+    }));
+    setVehicleType(vehicleType.length > 0 ? vehicleType : VEHICLETYPE);
+    setSpecies(species.length > 0 ? species : SPECIES);
+    setRetentionPark(retentionPark.length > 0 ? retentionPark : RETENTIONPARK);
+  }
+
   useEffect(() => {
     checkValuesAreAlreadyFilled();
     if (refData !== undefined) {
@@ -146,6 +187,29 @@ export function FirstInformation() {
       setRefData(undefined);
     }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setDefaultValues();
+    }, [])
+  );
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.removeByName("vehicleType");
+      mutableSubs.removeByName("species");
+      mutableSubs.removeByName("retentionPark");
+      mutableSubs.add(realm.objects(VehicleType), {
+        name: "vehicleType",
+      });
+      mutableSubs.add(realm.objects(Species), {
+        name: "species",
+      });
+      mutableSubs.add(realm.objects(RetentionPark), {
+        name: "retentionPark",
+      });
+    });
+  }, [realm]);
 
   return (
     <View className="flex-1 mt-5">
@@ -385,6 +449,7 @@ export function FirstInformation() {
         >
           {isRetentionPark ? (
             <SelectPark
+              retentionPark={retentionPark}
               onPress={handleSelect}
               onClose={() => {
                 resetSelect();
@@ -400,7 +465,7 @@ export function FirstInformation() {
                 resetSelect();
                 setModalVisible(false);
               }}
-              data={isType ? VEHICLETYPE : SPECIES}
+              data={isType ? vehicleType : species}
             />
           )}
         </Modal>

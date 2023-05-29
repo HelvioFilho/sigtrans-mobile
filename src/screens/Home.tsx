@@ -1,9 +1,12 @@
-import { Image, SectionList, Text, TouchableOpacity, View } from "react-native";
+import { Image, SectionList, Text, View } from "react-native";
 
 import Logo from "@/assets/logo.png";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DocumentsList } from "@/components/DocumentsList";
 import { isToday } from "@/utils/isToday";
+import { useRealm } from "@/database";
+import { VehicleInspection } from "@/database/schemas/VehicleInspection";
+import { useFocusEffect } from "@react-navigation/native";
 
 export type DocumentsProps = {
   id: string;
@@ -19,39 +22,58 @@ type DocumentsListProps = {
 };
 
 export function Home() {
-  const [documents, setDocuments] = useState<DocumentsListProps[]>([
-    {
-      date: "22/05/2023",
-      data: [
-        {
-          id: "1",
-          name: "João",
-          model: "Fiat",
-          plate: "ABC-1234",
-          retentionPark: "São Paulo",
-        },
-        {
-          id: "2",
-          name: "Maria",
-          model: "Gol",
-          plate: "DEF-5678",
-          retentionPark: "São Paulo",
-        },
-      ],
-    },
-    {
-      date: "21/05/2023",
-      data: [
-        {
-          id: "3",
-          name: "Miguel",
-          model: "Corsa",
-          plate: "GHI-9012",
-          retentionPark: "São Paulo",
-        },
-      ],
-    },
-  ]);
+  const [documents, setDocuments] = useState<DocumentsListProps[]>([]);
+
+  const realm = useRealm();
+
+  function getDocuments() {
+    const data = realm.objects<VehicleInspection>("VehicleInspection");
+
+    const dataGroup = data.sorted("date", true).reduce((acc, curr) => {
+      const date = curr.date.toLocaleDateString("pt-BR");
+      const find = acc.find((item) => item.date === date);
+      if (!find) {
+        acc.push({
+          date,
+          data: [
+            {
+              id: curr.documentId,
+              name: curr.agentName,
+              model: curr.model,
+              plate: curr.plate,
+              retentionPark: curr.retentionParkName,
+            },
+          ],
+        });
+      } else {
+        find.data.push({
+          id: curr.documentId,
+          name: curr.agentName,
+          model: curr.model,
+          plate: curr.plate,
+          retentionPark: curr.retentionParkName,
+        });
+      }
+      return acc;
+    }, [] as DocumentsListProps[]);
+    setDocuments(dataGroup);
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getDocuments();
+    }, [])
+  );
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.removeByName("VehicleInspection");
+      mutableSubs.add(realm.objects(VehicleInspection), {
+        name: "VehicleInspection",
+      });
+    });
+  }, [realm]);
+
   return (
     <View className="flex-1 px-4 pt-5 bg-slate-50">
       <View className="flex-row mt-[10%] items-end">
@@ -71,6 +93,13 @@ export function Home() {
             </Text>
           </View>
         )}
+        ListEmptyComponent={
+          <View className="mt-12 px-4">
+            <Text className="font-regular text-md text-center">
+              Ainda não há documentos cadastrados
+            </Text>
+          </View>
+        }
       />
     </View>
   );

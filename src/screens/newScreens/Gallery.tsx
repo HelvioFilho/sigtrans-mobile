@@ -114,8 +114,8 @@ export function Gallery() {
   }, []);
 
   return (
-    <View className="flex-1 mt-5">
-      <Text className="mt-[15%] mb-1 self-center font-bold text-title pb-4">
+    <View className="flex-1">
+      <Text className="mt-[10%] mb-1 self-center font-bold text-title pb-4">
         Registro do Veículo
       </Text>
       <ScrollView

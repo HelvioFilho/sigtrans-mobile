@@ -22,11 +22,7 @@ export default function App() {
 
   return (
     <AppProvider id={APP_ID as string}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <UserProvider fallback={LoadingData}>
         <RealmProvider sync={syncConfig} fallback={Loading}>
           {fontsLoaded ? <Routes /> : <Loading />}

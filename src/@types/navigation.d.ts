@@ -4,6 +4,9 @@ export declare global {
       New: {
         id: number;
       };
+      Document: {
+        id: string;
+      };
     }
   }
 }

@@ -4,6 +4,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { Home } from "@/screens/Home";
 import { Search } from "@/screens/Search";
 import { New } from "@/screens/New";
+import { Document } from "@/screens/Document";
 
 function TabNavigation() {
   const { Navigator, Screen } = createBottomTabNavigator();
@@ -25,6 +26,13 @@ function TabNavigation() {
               size={size}
             />
           ),
+        }}
+      />
+      <Screen
+        name="Document"
+        component={Document}
+        options={{
+          tabBarButton: () => null,
         }}
       />
       <Screen

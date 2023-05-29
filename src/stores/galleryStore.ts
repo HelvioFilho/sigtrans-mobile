@@ -1,13 +1,14 @@
 import { create } from "zustand";
-import { getStorage, saveStorage } from "@/utils/storageHelper";
+import { generateId, getStorage, saveStorage } from "@/utils/storageHelper";
 import { ImageSelectedProps } from "@/screens/newScreens/Gallery";
 
 type GalleryStore = {
   galleryData: ImageSelectedProps[];
   setGalleryData: (data: ImageSelectedProps[]) => void;
+  cleanGalleryData: () => void;
 };
-
-const KEY = "gallery";
+const id = generateId();
+const KEY = `gallery_${id}`;
 
 const response = getStorage(KEY);
 let initialData = response
@@ -21,5 +22,8 @@ export const useGalleryStore = create<GalleryStore>((set) => ({
       saveStorage(KEY, JSON.stringify(data));
       return { galleryData: data };
     });
+  },
+  cleanGalleryData: () => {
+    set({ galleryData: [] });
   },
 }));

@@ -1,7 +1,7 @@
 import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { LocationDTO } from "@/dtos/LocationDTO";
 import { SelectItemProps } from "@/screens/newScreens/SecondInformation";
-import { getStorage, saveStorage } from "@/utils/storageHelper";
+import { getStorage, removeStorage, saveStorage } from "@/utils/storageHelper";
 import { create } from "zustand";
 
 type SecondDataProps = AdditionalDataDTO &
@@ -13,6 +13,7 @@ type SecondDataProps = AdditionalDataDTO &
 type SecondStore = {
   secondData: SecondDataProps;
   setSecondData: (data: SecondDataProps) => void;
+  deleteSecondData: () => void;
 };
 
 const KEY = "secondInformation";
@@ -26,6 +27,12 @@ export const useSecondStore = create<SecondStore>((set) => ({
     set(() => {
       saveStorage(KEY, JSON.stringify(data));
       return { secondData: data };
+    });
+  },
+  deleteSecondData: () => {
+    set(() => {
+      removeStorage(KEY);
+      return { secondData: {} as SecondDataProps };
     });
   },
 }));

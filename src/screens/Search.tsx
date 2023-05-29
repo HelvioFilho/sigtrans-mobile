@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { SectionList, Text, View } from "react-native";
+
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import { InputField } from "@/components/InputField";
 import { IconButton } from "@/components/IconButton";
+import { DocumentsList } from "@/components/DocumentsList";
+
 import { useRealm } from "@/database";
 import { VehicleInspection } from "@/database/schemas/VehicleInspection";
-import { DocumentsList } from "@/components/DocumentsList";
+
 import { isToday } from "@/utils/isToday";
-import { DocumentsListProps } from "./Home";
 import { sortedDate } from "@/utils/sortedDate";
+
+import { DocumentsListProps } from "./Home";
 
 type FormData = {
   search: string;
@@ -18,6 +23,7 @@ type FormData = {
 
 const schema = Yup.object().shape({
   search: Yup.string()
+    .trim()
     .min(4, "Precisa ter no mínimo 4 caracteres")
     .required("A busca não pode ser vazia"),
 });

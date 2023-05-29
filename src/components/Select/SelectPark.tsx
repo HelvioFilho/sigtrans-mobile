@@ -1,4 +1,3 @@
-import { RETENTIONPARK } from "@/utils/defaultData";
 import { useState } from "react";
 import {
   FlatList,
@@ -8,22 +7,28 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { RetentionParkDefaultValue } from "@/screens/newScreens/FirstInformation";
 
 type SelectParkProps = {
+  retentionPark: RetentionParkDefaultValue[];
   onPress: (data: string[], value: string[], target: string) => void;
   onClose: () => void;
 };
 
-export function SelectPark({ onPress, onClose }: SelectParkProps) {
+export function SelectPark({
+  retentionPark,
+  onPress,
+  onClose,
+}: SelectParkProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredParks, setFilteredParks] = useState(RETENTIONPARK);
+  const [filteredParks, setFilteredParks] = useState(retentionPark);
 
   function handleSearch(text: string) {
     setSearchTerm(text);
 
-    if (text === "") return setFilteredParks(RETENTIONPARK);
+    if (text === "") return setFilteredParks(retentionPark);
 
-    const filtered = RETENTIONPARK.filter((park) =>
+    const filtered = retentionPark.filter((park) =>
       park.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredParks(filtered);

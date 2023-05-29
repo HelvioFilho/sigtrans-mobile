@@ -20,10 +20,15 @@ import {
   getPermissions,
   getReverseGeocodeAsync,
 } from "@/utils/locationHelper";
+import { ACCESSORY } from "@/utils/defaultData";
 
 import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { useSecondStore } from "@/stores/secondStore";
 import { useReviewStore } from "@/stores/reviewStore";
+import { useSelectItemStore } from "@/stores/selectItemStore";
+
+import { useRealm } from "@/database";
+import { Accessory } from "@/database/schemas/Accessory";
 
 type FormData = AdditionalDataDTO & {
   address: string;
@@ -35,6 +40,11 @@ export type SelectItemProps = {
   name: string;
   damage: string;
   other: boolean;
+};
+
+type AccessoryProps = {
+  id: string;
+  name: string;
 };
 
 const schema = yup.object().shape({
@@ -74,7 +84,9 @@ export function SecondInformation() {
 
   const { navigate } = useNavigation();
   const { secondData, setSecondData } = useSecondStore();
+  const { setSelectItem } = useSelectItemStore();
   const { refData, setRefData } = useReviewStore();
+  const realm = useRealm();
 
   const {
     control,
@@ -102,6 +114,22 @@ export function SecondInformation() {
 
   function removeItem(id: string) {
     setSelectedItem((prev) => prev.filter((item) => item.id !== id));
+  }
+
+  function checkForNewAccessory(currentAccessory: AccessoryProps[]) {
+    if (selectedItem.length === 0) return currentAccessory;
+    const newSelectedItem = currentAccessory
+      .map((itemA) => ({
+        id: itemA.id,
+        name: itemA.name,
+      }))
+      .concat(
+        selectedItem.filter(
+          (itemB) => !currentAccessory.some((itemA) => itemA.id === itemB.id)
+        )
+      )
+      .map(({ id, name }) => ({ id, name }));
+    return newSelectedItem;
   }
 
   const saveData = useCallback(
@@ -156,6 +184,17 @@ export function SecondInformation() {
     setLongitude(secondData.longitude);
   }
 
+  function setDefaultValues() {
+    const accessoryDb = realm.objects(Accessory).map((item) => ({
+      id: item._id.toString(),
+      name: item.name,
+    }));
+    const accessory = checkForNewAccessory(
+      accessoryDb.length > 0 ? accessoryDb : ACCESSORY
+    );
+    setSelectItem(accessory);
+  }
+
   useEffect(() => {
     getPermissions();
     checkItems();
@@ -165,9 +204,22 @@ export function SecondInformation() {
     }
   }, []);
 
+  useEffect(() => {
+    setDefaultValues();
+  }, [selectedItem]);
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.removeByName("selectItem");
+      mutableSubs.add(realm.objects(Accessory), {
+        name: "selectItem",
+      });
+    });
+    setDefaultValues();
+  }, [realm]);
   return (
-    <View className="flex-1 mt-5">
-      <Text className="mt-[15%] mb-1 self-center font-bold text-title pb-4">
+    <View className="flex-1">
+      <Text className="mt-[10%] mb-1 self-center font-bold text-title pb-4">
         Registro do Veículo
       </Text>
       <ScrollView

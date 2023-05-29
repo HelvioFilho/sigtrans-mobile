@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { ACCESSORY } from "@/utils/defaultData";
 
 type items = {
   id: string;
@@ -11,9 +10,7 @@ type SelectItemStore = {
   setSelectItem: (data: items[]) => void;
 };
 
-let initialData = ACCESSORY;
-
 export const useSelectItemStore = create<SelectItemStore>((set) => ({
-  selectItem: initialData,
+  selectItem: [],
   setSelectItem: (data) => set({ selectItem: data }),
 }));

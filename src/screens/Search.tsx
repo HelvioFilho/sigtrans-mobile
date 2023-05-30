@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SectionList, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -32,6 +33,8 @@ export function Search() {
   const [isLoading, setIsLoading] = useState(false);
   const [documents, setDocuments] = useState<DocumentsListProps[]>([]);
   const [startSearch, setStartSearch] = useState(false);
+
+  const { navigate } = useNavigation();
   const realm = useRealm();
 
   const {
@@ -43,42 +46,42 @@ export function Search() {
   });
 
   function handleSearch({ search }: Partial<FormData>) {
-    setIsLoading(true);
-    setStartSearch(true);
-    const isDate = search ? new Date(search).getTime() : 0;
-    const searchValue = search ? search : "";
-    let data;
+    try {
+      setIsLoading(true);
+      setStartSearch(true);
 
-    if (!isNaN(isDate) && isDate > 0) {
-      const date = new Date(searchValue).toLocaleDateString("pt-BR");
-      data = realm
+      const searchValue = search ? search : "";
+
+      const data = realm
         .objects<VehicleInspection>("VehicleInspection")
-        .filtered(`date = "${date}"`);
-    } else {
-      data = realm.objects<VehicleInspection>("VehicleInspection").filtered(
-        `driverLicenseOrId CONTAINS[c] "${searchValue}" 
-        OR driverName CONTAINS[c] "${searchValue}"
-        OR agentName CONTAINS[c] "${searchValue}"
-        OR plate CONTAINS[c] "${searchValue}"
-        OR chassi CONTAINS[c] "${searchValue}"
-        OR agentId CONTAINS[c] "${searchValue}"
-        `
-      );
-    }
+        .filtered(
+          `driverLicenseOrId CONTAINS[c] "${searchValue}" 
+          OR driverName CONTAINS[c] "${searchValue}"
+          OR agentName CONTAINS[c] "${searchValue}"
+          OR plate CONTAINS[c] "${searchValue}"
+          OR chassi CONTAINS[c] "${searchValue}"
+          OR agentId CONTAINS[c] "${searchValue}"
+          OR dateString CONTAINS[c] "${searchValue}"
+          `
+        );
 
-    const dataGroup = sortedDate(data);
-    setDocuments(dataGroup);
-    setIsLoading(false);
+      const dataGroup = sortedDate(data);
+      setDocuments(dataGroup);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <View className="flex-1 pt-[20%] px-4 bg-slate-50">
+    <View className="flex-1 pt-[10%] px-4 bg-slate-50">
       <Text className="font-bold text-md">Faça sua pesquisa</Text>
       <InputField
         name="search"
         control={control}
         error={errors && (errors.search?.message as string)}
-        placeholder="Exemplo de busca: 23/02/2023"
+        placeholder="Exemplo de busca: 29/05/2023"
         onBlur={() => setStartSearch(false)}
         icon={
           <IconButton
@@ -93,7 +96,12 @@ export function Search() {
           sections={documents}
           keyExtractor={(item) => item.id}
           className="my-5"
-          renderItem={({ item }) => <DocumentsList data={item} />}
+          renderItem={({ item }) => (
+            <DocumentsList
+              data={item}
+              onPress={() => navigate("Document", { id: item.id })}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           renderSectionHeader={({ section: { date } }) => (
             <View className="py-3 justify-center items-center">

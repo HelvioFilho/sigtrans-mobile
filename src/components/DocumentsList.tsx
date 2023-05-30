@@ -3,11 +3,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 type DocumentsListProps = {
   data: DocumentsProps;
+  onPress: () => void;
 };
 
-export function DocumentsList({ data }: DocumentsListProps) {
+export function DocumentsList({ data, onPress }: DocumentsListProps) {
   return (
-    <TouchableOpacity className="my-1.5" activeOpacity={0.8} onPress={() => {}}>
+    <TouchableOpacity className="my-1.5" activeOpacity={0.8} onPress={onPress}>
       <View className="w-full bg-gray-300 py-3 px-4 rounded-lg">
         <View className="flex-row items-center py-1">
           <Text className="font-bold text-base">Agente: </Text>

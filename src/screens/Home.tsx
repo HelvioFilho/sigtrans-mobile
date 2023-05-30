@@ -1,13 +1,16 @@
-import { Image, SectionList, Text, View } from "react-native";
-
-import Logo from "@/assets/logo.png";
 import { useCallback, useEffect, useState } from "react";
+import { Image, SectionList, Text, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
 import { DocumentsList } from "@/components/DocumentsList";
-import { isToday } from "@/utils/isToday";
+
 import { useRealm } from "@/database";
 import { VehicleInspection } from "@/database/schemas/VehicleInspection";
-import { useFocusEffect } from "@react-navigation/native";
+
+import { isToday } from "@/utils/isToday";
 import { sortedDate } from "@/utils/sortedDate";
+
+import Logo from "@/assets/logo.png";
 
 export type DocumentsProps = {
   id: string;
@@ -25,6 +28,7 @@ export type DocumentsListProps = {
 export function Home() {
   const [documents, setDocuments] = useState<DocumentsListProps[]>([]);
 
+  const { navigate } = useNavigation();
   const realm = useRealm();
 
   function getDocuments() {
@@ -50,7 +54,7 @@ export function Home() {
   }, [realm]);
 
   return (
-    <View className="flex-1 px-4 pt-5 bg-slate-50">
+    <View className="flex-1 px-4 bg-slate-50">
       <View className="flex-row mt-[10%] items-end">
         <Image className="h-[50px] w-[50px] rounded-md" source={Logo} />
         <Text className="font-bold text-title ml-4">Lista de Documentos</Text>
@@ -59,7 +63,12 @@ export function Home() {
         sections={documents}
         keyExtractor={(item) => item.id}
         className="my-5"
-        renderItem={({ item }) => <DocumentsList data={item} />}
+        renderItem={({ item }) => (
+          <DocumentsList
+            data={item}
+            onPress={() => navigate("Document", { id: item.id })}
+          />
+        )}
         showsVerticalScrollIndicator={false}
         renderSectionHeader={({ section: { date } }) => (
           <View className="py-3 justify-center items-center">

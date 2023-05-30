@@ -20,7 +20,7 @@ import {
   getPermissions,
   getReverseGeocodeAsync,
 } from "@/utils/locationHelper";
-import { ACCESSORY } from "@/utils/defaultData";
+import { ACCESSORY, DAMAGE } from "@/utils/defaultData";
 
 import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { useSecondStore } from "@/stores/secondStore";
@@ -29,6 +29,7 @@ import { useSelectItemStore } from "@/stores/selectItemStore";
 
 import { useRealm } from "@/database";
 import { Accessory } from "@/database/schemas/Accessory";
+import { Damage } from "@/database/schemas/Damage";
 
 type FormData = AdditionalDataDTO & {
   address: string;
@@ -42,7 +43,7 @@ export type SelectItemProps = {
   other: boolean;
 };
 
-type AccessoryProps = {
+type SyncProps = {
   id: string;
   name: string;
 };
@@ -78,6 +79,7 @@ export function SecondInformation() {
   const [isLoading, setIsLoading] = useState(false);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [damageValue, setDamageValue] = useState<SyncProps[]>([]);
   const [inputHeight, setInputHeight] = useState(48);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SelectItemProps[]>([]);
@@ -116,7 +118,7 @@ export function SecondInformation() {
     setSelectedItem((prev) => prev.filter((item) => item.id !== id));
   }
 
-  function checkForNewAccessory(currentAccessory: AccessoryProps[]) {
+  function checkForNewAccessory(currentAccessory: SyncProps[]) {
     if (selectedItem.length === 0) return currentAccessory;
     const newSelectedItem = currentAccessory
       .map((itemA) => ({
@@ -193,6 +195,11 @@ export function SecondInformation() {
       accessoryDb.length > 0 ? accessoryDb : ACCESSORY
     );
     setSelectItem(accessory);
+    const damageDb = realm.objects(Damage).map((item) => ({
+      id: item._id.toString(),
+      name: item.name,
+    }));
+    setDamageValue(damageDb.length > 0 ? damageDb : DAMAGE);
   }
 
   useEffect(() => {
@@ -210,9 +217,15 @@ export function SecondInformation() {
 
   useEffect(() => {
     realm.subscriptions.update((mutableSubs) => {
-      mutableSubs.removeByName("selectItem");
+      mutableSubs.removeByName("accessory");
       mutableSubs.add(realm.objects(Accessory), {
-        name: "selectItem",
+        name: "accessory",
+      });
+    });
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.removeByName("damage");
+      mutableSubs.add(realm.objects(Damage), {
+        name: "damage",
       });
     });
     setDefaultValues();
@@ -429,6 +442,7 @@ export function SecondInformation() {
       >
         <SelectItems
           data={selectedItem}
+          damageValue={damageValue}
           onPress={setSelectedItem}
           onClose={() => setModalVisible(false)}
         />

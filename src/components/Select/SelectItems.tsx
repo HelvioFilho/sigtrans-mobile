@@ -7,22 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { ACCESSORY, DAMAGE } from "@/utils/defaultData";
-import { IconButton } from "../IconButton";
-import { Button } from "../Button";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+
+import { Ionicons } from "@expo/vector-icons";
+
+import { IconButton } from "../IconButton";
+import { Button } from "../Button";
 import { InputField } from "../InputField";
+
 import { SelectItemProps } from "@/screens/newScreens/SecondInformation";
 import { useSelectItemStore } from "@/stores/selectItemStore";
-
-type SelectItemsProps = {
-  onPress: (data: SelectItemProps[]) => void;
-  onClose: () => void;
-  data: SelectItemProps[];
-};
 
 type FormData = {
   customAccessory: string;
@@ -33,7 +29,19 @@ type ModalItemProps = {
   name: string;
 };
 
-export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
+type SelectItemsProps = {
+  onPress: (data: SelectItemProps[]) => void;
+  onClose: () => void;
+  damageValue: ModalItemProps[];
+  data: SelectItemProps[];
+};
+
+export function SelectItems({
+  data,
+  damageValue,
+  onPress,
+  onClose,
+}: SelectItemsProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [customDamage, setCustomDamage] = useState("");
   const [customErrorDamage, setCustomErrorDamage] = useState(false);
@@ -54,6 +62,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
       {}
     )
   );
+
   const [selectedAccessory, setSelectedAccessory] =
     useState<SelectItemProps[]>(data);
 
@@ -205,7 +214,7 @@ export function SelectItems({ data, onPress, onClose }: SelectItemsProps) {
               </View>
             </TouchableOpacity>
             {expandedId[item.id] &&
-              DAMAGE.map((damage) => (
+              damageValue.map((damage) => (
                 <TouchableOpacity
                   key={damage.id}
                   className={`

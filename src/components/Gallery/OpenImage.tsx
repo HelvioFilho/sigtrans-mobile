@@ -4,8 +4,8 @@ import { OptionButton } from "./OptionButton";
 
 type OpenImageProps = {
   onClose: () => void;
-  onSave: () => void;
-  onDelete: () => void;
+  onSave?: () => void;
+  onDelete?: () => void;
   uri: string;
 };
 
@@ -26,20 +26,26 @@ export function OpenImage({ onClose, onSave, onDelete, uri }: OpenImageProps) {
           resizeMode="contain"
         />
       </View>
-      <View className="flex-row justify-around w-full mb-4">
-        <OptionButton
-          title="Salvar"
-          color="bg-teal-600"
-          iconName="save"
-          onPress={onSave}
-        />
-        <OptionButton
-          title="Apagar"
-          color="bg-red-600"
-          iconName="trash"
-          onPress={onDelete}
-        />
-      </View>
+      {(onSave || onDelete) && (
+        <View className="flex-row justify-around w-full mb-4">
+          {onSave && (
+            <OptionButton
+              title="Salvar"
+              color="bg-teal-600"
+              iconName="save"
+              onPress={onSave}
+            />
+          )}
+          {onDelete && (
+            <OptionButton
+              title="Apagar"
+              color="bg-red-600"
+              iconName="trash"
+              onPress={onDelete}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }

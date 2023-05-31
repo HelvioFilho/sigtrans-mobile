@@ -17,6 +17,7 @@ import { isToday } from "@/utils/isToday";
 import { sortedDate } from "@/utils/sortedDate";
 
 import { DocumentsListProps } from "./Home";
+import { useDocumentStore } from "@/stores/documentStore";
 
 type FormData = {
   search: string;
@@ -34,6 +35,7 @@ export function Search() {
   const [documents, setDocuments] = useState<DocumentsListProps[]>([]);
   const [startSearch, setStartSearch] = useState(false);
 
+  const { setIdData } = useDocumentStore();
   const { navigate } = useNavigation();
   const realm = useRealm();
 
@@ -44,6 +46,11 @@ export function Search() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  function handleSelectDocument(id: string) {
+    setIdData(id);
+    navigate("Document");
+  }
 
   function handleSearch({ search }: Partial<FormData>) {
     try {
@@ -99,7 +106,7 @@ export function Search() {
           renderItem={({ item }) => (
             <DocumentsList
               data={item}
-              onPress={() => navigate("Document", { id: item.id })}
+              onPress={() => handleSelectDocument(item.id)}
             />
           )}
           showsVerticalScrollIndicator={false}

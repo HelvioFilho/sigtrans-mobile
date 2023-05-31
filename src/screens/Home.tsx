@@ -11,13 +11,14 @@ import { isToday } from "@/utils/isToday";
 import { sortedDate } from "@/utils/sortedDate";
 
 import Logo from "@/assets/logo.png";
+import { useDocumentStore } from "@/stores/documentStore";
 
 export type DocumentsProps = {
   id: string;
   name: string;
   model: string;
   plate: string;
-  retentionPark: string;
+  chassi: string;
 };
 
 export type DocumentsListProps = {
@@ -30,12 +31,18 @@ export function Home() {
 
   const { navigate } = useNavigation();
   const realm = useRealm();
+  const { setIdData } = useDocumentStore();
 
   function getDocuments() {
     const data = realm.objects<VehicleInspection>("VehicleInspection");
 
     const dataGroup = sortedDate(data);
     setDocuments(dataGroup);
+  }
+
+  function handleSelectDocument(id: string) {
+    setIdData(id);
+    navigate("Document");
   }
 
   useFocusEffect(
@@ -66,7 +73,7 @@ export function Home() {
         renderItem={({ item }) => (
           <DocumentsList
             data={item}
-            onPress={() => navigate("Document", { id: item.id })}
+            onPress={() => handleSelectDocument(item.id)}
           />
         )}
         showsVerticalScrollIndicator={false}

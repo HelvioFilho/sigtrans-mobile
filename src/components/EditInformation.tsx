@@ -1,7 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import { useReviewStore } from "@/stores/reviewStore";
 
 type EditInformationProps = {
   title: string;
@@ -12,12 +11,11 @@ type EditInformationProps = {
 
 export function EditInformation({
   title,
-  refName,
   id = 0,
   isEditable = true,
 }: EditInformationProps) {
   const { navigate } = useNavigation();
-  const { setRefData } = useReviewStore();
+  const navi = id === 0 ? "First" : "Second";
   return (
     <View className="flex-row justify-between">
       <Text className="text-base">{title}</Text>
@@ -25,8 +23,7 @@ export function EditInformation({
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            setRefData(refName);
-            navigate("New", { id });
+            navigate(navi);
           }}
         >
           <Feather name="edit" size={24} color="black" />

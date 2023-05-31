@@ -3,8 +3,28 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { Home } from "@/screens/Home";
 import { Search } from "@/screens/Search";
-import { New } from "@/screens/New";
 import { Document } from "@/screens/Document";
+import { FirstInformation } from "@/screens/newScreens/FirstInformation";
+import { SecondInformation } from "@/screens/newScreens/SecondInformation";
+import { Gallery } from "@/screens/newScreens/Gallery";
+import { Review } from "@/screens/newScreens/Review";
+
+function CreateDocuments() {
+  const { Navigator, Screen } = createStackNavigator();
+
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="First" component={FirstInformation} />
+      <Screen name="Second" component={SecondInformation} />
+      <Screen name="Gallery" component={Gallery} />
+      <Screen name="Review" component={Review} />
+    </Navigator>
+  );
+}
 
 function TabNavigation() {
   const { Navigator, Screen } = createBottomTabNavigator();
@@ -29,13 +49,6 @@ function TabNavigation() {
         }}
       />
       <Screen
-        name="Document"
-        component={Document}
-        options={{
-          tabBarButton: () => null,
-        }}
-      />
-      <Screen
         name="Search"
         component={Search}
         options={{
@@ -46,8 +59,8 @@ function TabNavigation() {
         }}
       />
       <Screen
-        name="New"
-        component={New}
+        name="NewScreens"
+        component={CreateDocuments}
         options={{
           tabBarLabel: "Novo",
           tabBarIcon: ({ focused, color, size }) => (
@@ -73,6 +86,7 @@ function StackNavigation() {
       }}
     >
       <Screen name="Main" component={TabNavigation} />
+      <Screen name="Document" component={Document} />
     </Navigator>
   );
 }

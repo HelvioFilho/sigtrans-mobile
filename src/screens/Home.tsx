@@ -48,7 +48,7 @@ export function Home() {
   useFocusEffect(
     useCallback(() => {
       getDocuments();
-    }, [])
+    }, [realm])
   );
 
   useEffect(() => {

@@ -13,10 +13,10 @@ export function sortedDate(
         data: [
           {
             id: curr.documentId,
-            name: curr.agentName,
+            name: curr.driverName,
             model: curr.model,
             plate: curr.plate,
-            retentionPark: curr.retentionParkName,
+            chassi: curr.chassi,
           },
         ],
       });
@@ -26,7 +26,7 @@ export function sortedDate(
         name: curr.agentName,
         model: curr.model,
         plate: curr.plate,
-        retentionPark: curr.retentionParkName,
+        chassi: curr.chassi,
       });
     }
     return acc;

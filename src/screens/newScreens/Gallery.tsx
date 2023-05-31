@@ -164,16 +164,10 @@ export function Gallery() {
         </View>
         <View className="flex-row justify-between px-4 pt-14">
           <View className="w-[40%]">
-            <Button
-              title="Anterior"
-              onPress={() => navigate("New", { id: 1 })}
-            />
+            <Button title="Anterior" onPress={() => navigate("Second")} />
           </View>
           <View className="w-[40%]">
-            <Button
-              title="Próximo"
-              onPress={() => navigate("New", { id: 3 })}
-            />
+            <Button title="Próximo" onPress={() => navigate("Review")} />
           </View>
         </View>
       </ScrollView>

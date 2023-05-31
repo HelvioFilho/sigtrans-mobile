@@ -24,7 +24,6 @@ import { ACCESSORY, DAMAGE } from "@/utils/defaultData";
 
 import { AdditionalDataDTO } from "@/dtos/AdditionalDataDTO";
 import { useSecondStore } from "@/stores/secondStore";
-import { useReviewStore } from "@/stores/reviewStore";
 import { useSelectItemStore } from "@/stores/selectItemStore";
 
 import { useRealm } from "@/database";
@@ -87,7 +86,6 @@ export function SecondInformation() {
   const { navigate } = useNavigation();
   const { secondData, setSecondData } = useSecondStore();
   const { setSelectItem } = useSelectItemStore();
-  const { refData, setRefData } = useReviewStore();
   const realm = useRealm();
 
   const {
@@ -149,7 +147,7 @@ export function SecondInformation() {
         checkList: selectedItem,
       };
       setSecondData(newData);
-      navigate("New", { id: 2 });
+      navigate("Gallery");
     },
     [navigate, latitude, longitude, selectedItem]
   );
@@ -205,10 +203,6 @@ export function SecondInformation() {
   useEffect(() => {
     getPermissions();
     checkItems();
-    if (refData !== undefined) {
-      refs[refData].current?.focus();
-      setRefData(undefined);
-    }
   }, []);
 
   useEffect(() => {
@@ -422,10 +416,7 @@ export function SecondInformation() {
         </View>
         <View className="flex-row justify-between px-4 pt-8">
           <View className="w-[40%]">
-            <Button
-              title="Anterior"
-              onPress={() => navigate("New", { id: 0 })}
-            />
+            <Button title="Anterior" onPress={() => navigate("First")} />
           </View>
           <View className="w-[40%]">
             <Button title="Próximo" onPress={handleSubmit(saveData)} />

@@ -22,7 +22,6 @@ import { VehicleDTO } from "@/dtos/VehicleDTO";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useFirstStore } from "@/stores/firstStore";
-import { useReviewStore } from "@/stores/reviewStore";
 import { useRealm } from "@/database";
 import { VehicleType } from "@/database/schemas/VehicleType";
 import { Species } from "@/database/schemas/Species";
@@ -92,7 +91,6 @@ export function FirstInformation() {
 
   const { navigate } = useNavigation();
   const { firstData, setFirstData } = useFirstStore();
-  const { refData, setRefData } = useReviewStore();
 
   const {
     control,
@@ -127,7 +125,7 @@ export function FirstInformation() {
   const saveData = useCallback(
     (data: Partial<FormData>) => {
       setFirstData(data);
-      navigate("New", { id: 1 });
+      navigate("Second");
     },
     [navigate]
   );
@@ -181,10 +179,6 @@ export function FirstInformation() {
 
   useEffect(() => {
     checkValuesAreAlreadyFilled();
-    if (refData !== undefined) {
-      refs[refData].current?.focus();
-      setRefData(undefined);
-    }
   }, []);
 
   useFocusEffect(
@@ -238,7 +232,7 @@ export function FirstInformation() {
               keyboardType="visible-password"
               uppercase
               blurOnSubmit={false}
-              onSubmitEditing={() => refs.driver.current?.focus()}
+              onSubmitEditing={() => refs.driverTowTruck.current?.focus()}
             />
           }
         />
@@ -428,6 +422,7 @@ export function FirstInformation() {
               control={control}
               keyboardType="number-pad"
               placeholder="Ano do Veículo"
+              maxLength={4}
               error={errors && (errors.year?.message as string)}
               inputRef={refs.year}
             />

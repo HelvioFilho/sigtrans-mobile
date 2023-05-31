@@ -119,6 +119,18 @@ export function Review() {
     }
   }
 
+  function ShowAlert() {
+    Alert.alert(
+      "Aviso",
+      "Deseja salvar as informações?\nUma vez salvo não será possível alterar.",
+      [
+        { text: "Revisar", style: "cancel" },
+        { text: "Salvar", onPress: () => saveVehicleInspection() },
+      ],
+      { cancelable: false }
+    );
+  }
+
   function loadData() {
     setGallery(galleryData ? galleryData : []);
     setCheckList(secondData ? secondData.checkList : []);
@@ -276,11 +288,7 @@ export function Review() {
             <Button title="Anterior" onPress={() => navigate("Gallery")} />
           </View>
           <View className="w-[40%]">
-            <Button
-              title="Salvar"
-              disabled={isLoading}
-              onPress={saveVehicleInspection}
-            />
+            <Button title="Salvar" disabled={isLoading} onPress={ShowAlert} />
           </View>
         </View>
         <Modal

@@ -33,6 +33,15 @@ function TabNavigation() {
     <Navigator
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          height: 70,
+          paddingTop: 8,
+          paddingBottom: 13,
+        },
+        tabBarLabelStyle: {
+          fontFamily: "Roboto_400Regular",
+          fontSize: 14,
+        },
       }}
     >
       <Screen

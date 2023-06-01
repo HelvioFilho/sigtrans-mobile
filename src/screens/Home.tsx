@@ -12,6 +12,11 @@ import { sortedDate } from "@/utils/sortedDate";
 
 import Logo from "@/assets/logo.png";
 import { useDocumentStore } from "@/stores/documentStore";
+import { Accessory } from "@/database/schemas/Accessory";
+import { Damage } from "@/database/schemas/Damage";
+import { VehicleType } from "@/database/schemas/VehicleType";
+import { Species } from "@/database/schemas/Species";
+import { RetentionPark } from "@/database/schemas/RetentionPark";
 
 export type DocumentsProps = {
   id: string;
@@ -54,8 +59,28 @@ export function Home() {
   useEffect(() => {
     realm.subscriptions.update((mutableSubs) => {
       mutableSubs.removeByName("VehicleInspection");
+      mutableSubs.removeByName("accessory");
+      mutableSubs.removeByName("damage");
+      mutableSubs.removeByName("vehicleType");
+      mutableSubs.removeByName("species");
+      mutableSubs.removeByName("retentionPark");
       mutableSubs.add(realm.objects(VehicleInspection), {
         name: "VehicleInspection",
+      });
+      mutableSubs.add(realm.objects(Accessory), {
+        name: "accessory",
+      });
+      mutableSubs.add(realm.objects(Damage), {
+        name: "damage",
+      });
+      mutableSubs.add(realm.objects(VehicleType), {
+        name: "vehicleType",
+      });
+      mutableSubs.add(realm.objects(Species), {
+        name: "species",
+      });
+      mutableSubs.add(realm.objects(RetentionPark), {
+        name: "retentionPark",
       });
     });
   }, [realm]);

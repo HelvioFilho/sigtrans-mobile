@@ -29,6 +29,7 @@ import { useSelectItemStore } from "@/stores/selectItemStore";
 import { useRealm } from "@/database";
 import { Accessory } from "@/database/schemas/Accessory";
 import { Damage } from "@/database/schemas/Damage";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 type FormData = AdditionalDataDTO & {
   address: string;
@@ -86,7 +87,9 @@ export function SecondInformation() {
   const { navigate } = useNavigation();
   const { secondData, setSecondData } = useSecondStore();
   const { setSelectItem } = useSelectItemStore();
+
   const realm = useRealm();
+  const netInfo = useNetInfo();
 
   const {
     control,
@@ -157,11 +160,14 @@ export function SecondInformation() {
       setIsLoading(true);
       const location = await getCurrentLocation();
       const { latitude, longitude } = location.coords;
-      const street = await getReverseGeocodeAsync({ latitude, longitude });
       setLatitude(latitude.toString());
       setLongitude(longitude.toString());
+      let street = "";
+      if (netInfo.isConnected) {
+        const response = await getReverseGeocodeAsync({ latitude, longitude });
+        street = response ? response : "";
+      }
       setValue("address", street);
-      clearErrors("address");
     } catch (error) {
       Alert.alert(
         "Aviso!",
@@ -169,6 +175,7 @@ export function SecondInformation() {
       );
       console.log(error);
     } finally {
+      clearErrors("address");
       setIsLoading(false);
     }
   }

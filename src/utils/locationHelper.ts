@@ -20,7 +20,7 @@ export async function getCurrentLocation() {
 
 export async function getReverseGeocodeAsync(
   location: LocationProps
-): Promise<String> {
+): Promise<string> {
   let data: Location.LocationGeocodedAddress[] =
     await Location.reverseGeocodeAsync(location);
 
